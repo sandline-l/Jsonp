@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JSONP跨域-百度搜索</title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+            list-style: none;
+            text-decoration: none;
+        }
+
+        input {
+            width: 540px;
+            height: 36px;
+            position: absolute;
+            top: 100px;
+            left: 100px;
+        }
+        a{
+            color: #ccc;
+        }
+        ul {
+            width: 540px;
+            position: absolute;
+            top: 138px;
+            left: 100px;
+            border: 1px solid #ccc;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>JSONP跨域-百度搜索</h1>
+    <input type="text">
+    <ul></ul>
+    <script>
+        var oInput = document.getElementsByTagName('input')[0],
+            oUl = document.getElementsByTagName('ul')[0];
+        oInput.oninput = function () {
+            //取得input框里输入的值
+            var value = oInput.value;
+            var oScript = document.createElement('script');
+            //给script标签添加src，使其能获取数据
+            oScript.src = "https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=" + value + "&cb=gg";
+            //将script标签插入到body里，使它能够获取到数据
+            document.body.appendChild(oScript);
+            //获取数据之后，就将script标签删除，以免每次获取数据之后都留下一个标签，使得标签越来越多
+            document.body.removeChild(oScript);
+        }
+        //处理data数据，将取得的值加到li里，再把li加到ul里
+        function gg(data) {
+            //处理JSON格式的数据，得到需要的数组
+            var myData = data.s;
+            var str = '';
+            //当myData有值的时候，才添加li，否则ul为空
+            if (myData.length > 0) {
+                oUl.style.display = 'block';
+                //循环遍历，将每个数据用li包装起来，加到str里
+                myData.forEach(function (ele, index) {
+                    // str += "<li><a href='https://www.baidu.com/s?ie=utf-8&f=3&rsv_bp=0&rsv_idx=1&tn=sitehao123&wd="+ele+"'>" + ele + "</a></li>";
+                    //在li里添加一个a标签，并给出地址，使得可以点击来访问
+                    //这个地址是自己扒的，wd后面是你要传入的参数
+                    str += "<li><a href='https://www.baidu.com/s?wd=" + ele + "'>" + ele + "</a></li>";
+                    oUl.innerHTML = str;
+                });
+            } else {
+                oUl.style.display = "none";
+                oUl.innerHTML = '';
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
